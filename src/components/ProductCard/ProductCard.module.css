@@ -1,0 +1,168 @@
+.card {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Product image */
+
+.imageContainer {
+  position: relative;
+
+  height: 220px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f9fafb;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  padding: 20px;
+}
+
+.discount {
+  position: absolute;
+
+  top: 12px;
+  left: 12px;
+
+  padding: 5px 9px;
+
+  border-radius: 5px;
+
+  background: #dcfce7;
+  color: #166534;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* Content */
+
+.content {
+  padding: 20px;
+}
+
+.category {
+  margin-bottom: 7px;
+
+  color: var(--green);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.name {
+  min-height: 48px;
+
+  margin-bottom: 14px;
+
+  color: var(--ink);
+
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+
+/* Price */
+
+.priceRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 14px;
+}
+
+.price {
+  color: #111827;
+
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.originalPrice {
+  color: #9ca3af;
+
+  font-size: 13px;
+
+  text-decoration: line-through;
+}
+
+
+/* Platform */
+
+.platform {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 10px 0;
+
+  border-top: 1px solid #f3f4f6;
+
+  border-bottom: 1px solid #f3f4f6;
+
+  color: #9ca3af;
+
+  font-size: 12px;
+}
+
+.platform strong {
+  color: #374151;
+}
+
+
+/* Button */
+
+.button {
+  width: 100%;
+
+  margin-top: 15px;
+
+  padding: 11px;
+
+  display: block;
+
+  border-radius: 4px;
+
+  background: var(--green-soft);
+  color: var(--green-dark);
+
+  text-align: center;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  transition: background 0.2s ease;
+}
+
+.button:hover {
+  background: #dbead9;
+}
+
+.button span { padding-left: 5px; }

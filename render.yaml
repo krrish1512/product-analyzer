@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: pricewise
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npm run build
+    startCommand: npm run db:setup && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pricewise-db
+          property: connectionString
+
+databases:
+  - name: pricewise-db
+    databaseName: pricewise
+    user: pricewise
+    plan: basic-256mb
