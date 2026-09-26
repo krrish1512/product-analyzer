@@ -8,32 +8,34 @@ For step-by-step setup, database, Docker, and deployment instructions, see the [
 
 - Node.js 22.12 or newer
 - npm
-- Docker Desktop for the local database or the full container stack
+- Docker Desktop is optional for the default local workflow
 
 ## Local Development
 
-Install dependencies and create a local environment file:
+Install dependencies from the lockfile:
 
 ```sh
-npm install
-cp .env.example .env
+npm ci
 ```
 
-Start PostgreSQL in Docker, then apply the schema and sample catalog:
-
-```sh
-docker compose up -d db
-npm run db:setup
-```
-
-Run the API and Vite in separate terminals:
+Run the API and frontend in separate terminals:
 
 ```sh
 npm run dev:api
 npm run dev
 ```
 
-Open the Vite URL printed by the second command. Vite proxies `/api` requests to Express on port `3000`.
+The development API creates an in-memory PostgreSQL database and seeds the demo catalog automatically. It does not need Docker or an environment file; its demo data resets when the API restarts. Open the Vite URL printed by `npm run dev` (usually `http://localhost:5173`).
+
+To use a local PostgreSQL container instead, copy `.env.example` to `.env`, start the database, and initialize it:
+
+```sh
+cp .env.example .env
+docker compose up -d db
+npm run db:setup
+```
+
+Then run `npm run dev:api` and `npm run dev` in separate terminals. Vite proxies `/api` requests to Express on port `3000`.
 
 On PowerShell, use `Copy-Item .env.example .env` in place of `cp`.
 

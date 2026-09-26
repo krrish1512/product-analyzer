@@ -6,7 +6,7 @@ This guide takes a new checkout from local setup through a production deployment
 
 - Node.js 22.12 or newer and npm
 - Git
-- Docker Desktop with the Linux container engine running
+- Docker Desktop with the Linux container engine running only if you choose the Docker/PostgreSQL option
 - A Render account for the deployment steps below
 
 Check the installed tools in PowerShell:
@@ -17,7 +17,7 @@ npm --version
 docker version
 ```
 
-`docker version` should show both Client and Server details. If it only shows a pipe/daemon connection error, start Docker Desktop and wait for its engine to become ready.
+Docker is optional for the default local workflow. If you choose Docker, `docker version` should show both Client and Server details. If it only shows a pipe/daemon connection error, start Docker Desktop and wait for its engine to become ready.
 
 ## 2. Get the Project Ready
 
@@ -28,62 +28,56 @@ git clone <your-repository-url>
 Set-Location <repository-folder>
 ```
 
-Install the locked dependencies and create a local environment file:
+Install the locked dependencies:
 
 ```powershell
 npm ci
-Copy-Item .env.example .env
 ```
 
-Keep `.env` on your machine. It is ignored by Git. `.env.example` contains local-only settings and is safe to keep in the repository. Never put a production database URL in frontend code or a `VITE_` variable.
+The default development API uses in-memory PostgreSQL and does not need an environment file or a Docker installation. Seeded demo catalog data is recreated whenever the API restarts. Never put a production database URL in frontend code or a `VITE_` variable.
 
 Make sure `package.json` and `package-lock.json` are both committed; deployment uses `npm ci` and requires the lock file.
 
-## 3. Start PostgreSQL and Initialize Data
+## 3. Start the Local App and Database
 
-Start only the database container:
-
-```powershell
-docker compose up -d db
-docker compose ps
-```
-
-Compose reads `.env` automatically. The example password is for local development only. The Compose database and host `DATABASE_URL` use the same `POSTGRES_PASSWORD` value.
-
-Create the tables and insert the sample products:
-
-```powershell
-npm run db:setup
-```
-
-This runs `npm run db:migrate` followed by `npm run db:seed`. Migrations are recorded in `schema_migrations`. Seeding is idempotent and does not overwrite existing product or offer rows.
-
-## 4. Run the App in Development
-
-Use two PowerShell terminals, both at the repository root.
-
-Terminal 1, start the API:
+Use two PowerShell terminals, both at the repository root. In Terminal 1, start the API and its embedded PostgreSQL database:
 
 ```powershell
 npm run dev:api
 ```
 
-Terminal 2, start the frontend:
+On start, the API creates the local database, applies the schema, and inserts sample products automatically. This database is in memory and resets/reseeds when the API restarts; it is for development only. The browser-local watchlist persists separately in `localStorage`.
+
+In Terminal 2, start the React/Vite frontend:
 
 ```powershell
 npm run dev
 ```
 
-Open the Vite URL printed in Terminal 2, normally `http://localhost:5173`. Requests to `/api` are proxied to the API on port `3000`.
+Open the URL printed by Vite, normally `http://localhost:5173`. The frontend proxies `/api` to the API at `http://localhost:3000`.
 
-Confirm the API and database are available:
+Verify the API:
 
 ```powershell
 Invoke-RestMethod http://localhost:3000/api/health
 Invoke-RestMethod "http://localhost:3000/api/products?q=sony&category=Audio&sort=price-low"
 ```
 
-The health response should report `status: ok` and `database: connected`. Stop either development process with `Ctrl+C`.
+The health response should show `status: ok` and `database: connected`. The product query should return Sony headphone listings. Stop the API and frontend with `Ctrl+C` in their terminals.
+
+### Optional: Use a Docker PostgreSQL database
+
+Use this path if you specifically need to develop against the same PostgreSQL server engine used in deployment. Create `.env` from the local-only template and start the database:
+
+```powershell
+Copy-Item .env.example .env
+docker compose up -d db
+npm run db:setup
+```
+
+Then run `npm run dev:api` and `npm run dev` in separate terminals as above. When `DATABASE_URL` is set in `.env`, the development API uses PostgreSQL instead of embedded PostgreSQL. Compose reads `.env` automatically; the template's password is for local use only.
+
+The migration command records applied versions in `schema_migrations`. Seeding is idempotent and preserves existing product and offer rows.
 
 ## 5. Make and Verify Changes
 
@@ -95,7 +89,7 @@ npm run lint
 npm run build
 ```
 
-The tests include HTTP checks and PostgreSQL-engine integration tests for the schema, migration runner, seed routine, filtering, price aggregation, and stored history. They run without Docker. The running app still requires PostgreSQL.
+The tests include HTTP checks and PostgreSQL-engine integration tests for the schema, migration runner, seed routine, filtering, price aggregation, and stored history. They run without Docker. The default local API uses PGlite, an embedded PostgreSQL engine; production uses the standard PostgreSQL service and `pg` driver.
 
 ### Database changes
 
@@ -174,8 +168,9 @@ For a multi-instance deployment, use the same single-release migration and share
 
 | Symptom                                       | Check                                                                                                                                                                        |
 | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Docker pipe or daemon error                   | Start Docker Desktop and verify `docker version` shows Server details.                                                                                                       |
-| `npm run db:setup` cannot connect             | Ensure the `db` service is healthy, `.env` exists, and `DATABASE_URL` matches `POSTGRES_PASSWORD`.                                                                           |
+| Docker pipe or daemon error                   | Docker is not required for the default local workflow. Start Docker Desktop only if you are using the optional Docker/PostgreSQL or complete-stack path.                     |
+| `npm run db:setup` cannot connect             | Ensure the `db` service is healthy, `.env` exists, and `DATABASE_URL` matches `POSTGRES_PASSWORD`; or remove `DATABASE_URL` to use the embedded local database.              |
+| API cannot load `express` or another package  | Run `npm ci`. If Windows reports a file-lock/`EPERM` error, stop project Node/Vite processes and rerun `npm ci`.                                                             |
 | Frontend says products cannot load            | Confirm `npm run dev:api` is running on port `3000`; Vite proxies `/api` there.                                                                                              |
 | Port `3000` or `5432` is occupied             | Stop the process using it, or change the relevant service port and Vite proxy consistently.                                                                                  |
 | API health returns an error                   | Inspect API logs, check `DATABASE_URL`, and verify migrations completed.                                                                                                     |
