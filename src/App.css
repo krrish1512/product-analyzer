@@ -1,3 +1,16 @@
-.appShell { min-height: 100vh; }
-.pageFooter { max-width: 1240px; margin: 0 auto; padding: 26px 28px 34px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
-@media (max-width: 640px) { .pageFooter { padding: 22px 18px 28px; } }
+.appShell {
+  min-height: 100vh;
+}
+.pageFooter {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 26px 28px 34px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (max-width: 640px) {
+  .pageFooter {
+    padding: 22px 18px 28px;
+  }
+}
