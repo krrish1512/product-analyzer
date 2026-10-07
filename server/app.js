@@ -3,8 +3,10 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import { fileURLToPath } from "node:url";
 import { productSelect } from "./product-query.js";
+import { getConfiguredRealDataProviders, refreshExternalProductCache } from "./external-data.js";
 
 const SORTS = new Set(["featured", "price-low", "price-high", "discount"]);
+const VALID_REAL_DATA_PROVIDERS = new Set(["auto", "ebay", "serpapi", "openwebninja"]);
 
 function readBoundedString(value, name, maxLength) {
   const result = typeof value === "string" ? value.trim() : "";
@@ -53,6 +55,35 @@ export function createApp(pool) {
     try {
       await pool.query("SELECT 1");
       response.json({ status: "ok", database: "connected" });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/data-sources", async (_request, response) => {
+    response.json({
+      ...getConfiguredRealDataProviders(),
+      cacheTtlMinutes: Number.parseInt(process.env.PRODUCT_CACHE_TTL_MINUTES ?? "180", 10),
+    });
+  });
+
+  app.post("/api/catalog/refresh", async (request, response, next) => {
+    try {
+      const query = readBoundedString(request.body?.q ?? request.body?.query ?? "", "q", 100);
+      const category = readBoundedString(request.body?.category ?? "", "category", 60);
+      const limit = readInteger(request.body?.limit ?? 12, 12, 1, 25);
+      const forceRefresh = Boolean(request.body?.forceRefresh);
+      const provider = readBoundedString(request.body?.provider ?? request.query?.provider ?? "auto", "provider", 20).toLowerCase();
+
+      if (limit === null) {
+        return response.status(400).json({ error: "Invalid pagination values." });
+      }
+      if (!VALID_REAL_DATA_PROVIDERS.has(provider)) {
+        return response.status(400).json({ error: "Unsupported data provider. Use auto, ebay, serpapi, or openwebninja." });
+      }
+
+      const result = await refreshExternalProductCache(pool, { query, category, limit, forceRefresh, provider });
+      response.json(result);
     } catch (error) {
       next(error);
     }

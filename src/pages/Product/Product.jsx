@@ -57,7 +57,7 @@ function Product() {
         <div className={styles.details}>
           <p className={styles.category}>{product.category}</p>
           <h1>{product.name}</h1>
-          <p className={styles.description}>Compare current listings and review the sample price range before you decide when to buy.</p>
+          <p className={styles.description}>{product.isLive ? "Compare live retailer listings and open the store page for the exact product." : "Compare current listings and review the sample price range before you decide when to buy."}</p>
           <div className={styles.currentPrice}><strong>{formatPrice(product.price)}</strong><span>best listed price</span>{product.originalPrice && <del>{formatPrice(product.originalPrice)}</del>}</div>
           <div className={styles.stats}>
             <div className={styles.stat}><span>Lowest seen</span><strong>{formatPrice(product.lowest)}</strong></div>
@@ -69,7 +69,7 @@ function Product() {
       </section>
 
       <section className={styles.section}>
-        <div className={styles.sectionHeader}><div><p>COMPARE STORES</p><h2>Current listings</h2></div><span>Sample prices · India</span></div>
+        <div className={styles.sectionHeader}><div><p>COMPARE STORES</p><h2>Current listings</h2></div><span>{product.isLive ? "Live retailer offers · India" : "Sample prices · India"}</span></div>
         <div className={styles.priceTable}>
           {product.prices.map((store) => <div className={styles.store} key={store.platform}>
             <div className={styles.storeName}><div className={styles.storeIcon}>{store.platform.slice(0, 1)}</div><div><strong>{store.platform}</strong><span>Listed price</span></div></div>

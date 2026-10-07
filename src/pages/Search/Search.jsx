@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { categories } from "../../services/products";
-import { listProducts } from "../../services/api";
+import { getDataSources, listProducts, refreshCatalog } from "../../services/api";
 import styles from "./Search.module.css";
+
+const STORAGE_KEY = "pricewise-data-mode";
+const PROVIDER_STORAGE_KEY = "pricewise-live-provider";
 
 function Search() {
   const [params, setParams] = useSearchParams();
@@ -15,6 +18,27 @@ function Search() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [retry, setRetry] = useState(0);
+  const [dataMode, setDataMode] = useState(() => localStorage.getItem(STORAGE_KEY) ?? "demo");
+  const [provider, setProvider] = useState(() => localStorage.getItem(PROVIDER_STORAGE_KEY) ?? "auto");
+  const [availableProviders, setAvailableProviders] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    getDataSources({ signal: controller.signal })
+      .then((result) => {
+        const enabled = Array.isArray(result.enabledProviders) ? result.enabledProviders : [];
+        setAvailableProviders(enabled);
+        if (enabled.length && !enabled.includes(provider) && provider !== "auto") {
+          setProvider("auto");
+          localStorage.setItem(PROVIDER_STORAGE_KEY, "auto");
+        }
+      })
+      .catch(() => {
+        setAvailableProviders([]);
+      });
+    return () => controller.abort();
+  }, [provider]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -39,6 +63,38 @@ function Search() {
     };
   }, [category, retry, search, sort]);
 
+  useEffect(() => {
+    if (dataMode !== "live") return;
+    if (!availableProviders.length) return;
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      const activeCategory = category === "All" ? "" : category;
+      setRefreshing(true);
+      refreshCatalog({
+        query: search.trim(),
+        category: activeCategory,
+        limit: 20,
+        forceRefresh: true,
+        provider,
+      }, { signal: controller.signal })
+        .then(() => {
+          setRetry((value) => value + 1);
+        })
+        .catch((requestError) => {
+          if (requestError.name !== "AbortError") setError(true);
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setRefreshing(false);
+        });
+    }, 350);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [availableProviders, category, dataMode, provider, search]);
+
   function updateCategory(value) {
     setCategory(value);
     const next = new URLSearchParams(params);
@@ -61,6 +117,20 @@ function Search() {
     setParams(new URLSearchParams(), { replace: true });
   }
 
+  function handleDataModeChange(nextMode) {
+    const nextValue = nextMode === "live" ? "live" : "demo";
+    setDataMode(nextValue);
+    localStorage.setItem(STORAGE_KEY, nextValue);
+    if (nextValue === "live" && !availableProviders.length) {
+      setError(true);
+    }
+  }
+
+  const liveProviderOptions = [
+    { value: "auto", label: "Auto" },
+    ...availableProviders.map((item) => ({ value: item, label: item }))
+  ];
+
   return (
     <main className={styles.searchPage}>
       <header className={styles.header}>
@@ -68,6 +138,29 @@ function Search() {
         <h1>Find your next good buy.</h1>
         <p>Compare current listings and open a product to see its price details.</p>
       </header>
+
+      <section className={styles.dataSourcePanel} aria-label="Catalog data source selection">
+        <div>
+          <p className={styles.dataLabel}>Catalog data</p>
+          <h2>{dataMode === "live" ? "Live providers" : "Demo catalog"}</h2>
+        </div>
+        <div className={styles.dataControls}>
+          <select value={dataMode} onChange={(event) => handleDataModeChange(event.target.value)} className={styles.select} aria-label="Choose data source">
+            <option value="demo">Demo catalog</option>
+            <option value="live" disabled={!availableProviders.length}>Live providers</option>
+          </select>
+          {dataMode === "live" && availableProviders.length > 0 && (
+            <select value={provider} onChange={(event) => {
+              const nextProvider = event.target.value;
+              setProvider(nextProvider);
+              localStorage.setItem(PROVIDER_STORAGE_KEY, nextProvider);
+            }} className={styles.select} aria-label="Choose live data provider">
+              {liveProviderOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            </select>
+          )}
+          {refreshing && <span className={styles.refreshing}>Refreshing live catalog…</span>}
+        </div>
+      </section>
 
       <section className={styles.controls} aria-label="Filter products">
         <label className={styles.searchInput}>

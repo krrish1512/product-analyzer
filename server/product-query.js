@@ -4,6 +4,12 @@ export const productSelect = `
     p.name,
     p.category,
     p.image_url AS image,
+    EXISTS (
+      SELECT 1
+      FROM price_history external_history
+      WHERE external_history.product_id = p.id
+        AND external_history.source LIKE 'external:%'
+    ) AS "isLive",
     best.price,
     best.original_price AS "originalPrice",
     best.store AS platform,

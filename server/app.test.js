@@ -58,3 +58,22 @@ test("unsupported sort values are rejected", async () => {
   const response = await fetch(`${baseUrl}/api/products?sort=arbitrary`);
   assert.equal(response.status, 400);
 });
+
+test("data source endpoint reports supported external providers", async () => {
+  const response = await fetch(`${baseUrl}/api/data-sources`);
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.deepEqual(body.supportedProviders, ["ebay", "serpapi", "openwebninja"]);
+  assert.ok(Array.isArray(body.enabledProviders));
+  assert.equal(body.cacheTtlMinutes, 180);
+});
+
+test("catalog refresh rejects unsupported providers", async () => {
+  const response = await fetch(`${baseUrl}/api/catalog/refresh`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ q: "sony", provider: "amazon" }),
+  });
+  assert.equal(response.status, 400);
+  assert.match((await response.json()).error, /Unsupported data provider/i);
+});

@@ -166,3 +166,17 @@
 }
 
 .button span { padding-left: 5px; }
+
+.actions {
+  display: grid;
+  gap: 8px;
+}
+
+.storeButton {
+  background: var(--green-dark);
+  color: #fff;
+}
+
+.storeButton:hover {
+  background: #245d3d;
+}

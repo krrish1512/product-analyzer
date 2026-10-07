@@ -3,6 +3,10 @@
 .label { margin: 0 0 9px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 1.2px; }
 .header h1 { margin: 0 0 9px; color: var(--ink); font-family: "Manrope", sans-serif; font-size: 36px; line-height: 1.2; }
 .header p { margin: 0; color: var(--muted); font-size: 15px; }
+.dataSourcePanel { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 18px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255, 255, 255, .78); }
+.dataLabel { margin: 0 0 6px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+.dataSourcePanel h2 { margin: 0; color: var(--ink); font-family: "Manrope", sans-serif; font-size: 20px; }
+.dataControls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .controls { display: flex; gap: 10px; margin-bottom: 34px; }
 .searchInput { min-width: 220px; height: 48px; flex: 1; display: flex; align-items: center; gap: 10px; padding: 0 13px; background: white; border: 1px solid var(--line); border-radius: 5px; }
 .searchInput:focus-within { border-color: #91b79a; box-shadow: 0 0 0 3px rgba(49, 115, 79, .08); }
@@ -11,6 +15,7 @@
 .searchInput input::placeholder { color: #929a92; }
 .searchInput > button { width: 28px; height: 28px; flex: 0 0 28px; border: 0; border-radius: 4px; background: transparent; color: var(--muted); font-size: 20px; }
 .select { min-width: 155px; padding: 0 32px 0 12px; border: 1px solid var(--line); border-radius: 5px; background: white; color: #404842; font-size: 12px; cursor: pointer; }
+.refreshing { color: var(--green-dark); font-size: 12px; font-weight: 700; }
 .results { border-top: 1px solid var(--line); padding-top: 24px; }
 .resultHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 17px; }
 .resultHeader > div { display: flex; align-items: baseline; gap: 12px; }

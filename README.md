@@ -39,6 +39,21 @@ Then run `npm run dev:api` and `npm run dev` in separate terminals. Vite proxies
 
 On PowerShell, use `Copy-Item .env.example .env` in place of `cp`.
 
+### Real product-data integrations
+
+The app can optionally enrich searches with live marketplace results from eBay, SerpAPI, and OpenWeb Ninja. Add the API keys you want to the local `.env` file, leaving each value blank when you want the demo catalog only.
+
+```env
+EBAY_CLIENT_ID=
+EBAY_CLIENT_SECRET=
+SERPAPI_API_KEY=
+OPENWEBNINJA_API_KEY=
+OPENWEBNINJA_BASE_URL=https://api.openwebninja.com
+```
+
+The backend checks the configured providers automatically and skips unavailable sources without crashing the app.
+For SerpAPI, live search also requests merchant offers for each returned product so store buttons can open retailer product pages directly. This uses additional SerpAPI requests per result.
+
 ## Commands
 
 | Command              | Description                                                  |

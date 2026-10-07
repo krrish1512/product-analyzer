@@ -1,7 +1,11 @@
-async function request(path, signal) {
+async function request(path, signal, options = {}) {
   const response = await fetch(path, {
+    ...options,
     signal,
-    headers: { Accept: "application/json" },
+    headers: {
+      Accept: "application/json",
+      ...(options.headers ?? {}),
+    },
   });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
@@ -19,4 +23,16 @@ export function listProducts({ query = "", category = "", sort = "featured", lim
 
 export function getProduct(id, { signal } = {}) {
   return request(`/api/products/${encodeURIComponent(id)}`, signal);
+}
+
+export function getDataSources({ signal } = {}) {
+  return request("/api/data-sources", signal);
+}
+
+export function refreshCatalog({ query = "", category = "", limit = 12, forceRefresh = true, provider = "auto" } = {}, { signal } = {}) {
+  return request("/api/catalog/refresh", signal, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ q: query, category, limit, forceRefresh, provider }),
+  });
 }

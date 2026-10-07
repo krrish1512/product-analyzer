@@ -11,7 +11,7 @@ let baseUrl;
 
 before(async () => {
   database = new PGlite();
-  assert.deepEqual(await applyMigrations(database), ["001_initial.sql"]);
+  assert.deepEqual(await applyMigrations(database), ["001_initial.sql", "002_external_product_cache.sql"]);
   assert.deepEqual(await applyMigrations(database), []);
   await seedCatalog(database);
   await seedCatalog(database);
@@ -21,7 +21,6 @@ before(async () => {
 });
 
 after(async () => {
-  server.closeAllConnections();
   await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   await database.close();
 });

@@ -1,7 +1,23 @@
 import { Link } from "react-router-dom";
 import styles from "./ProductCard.module.css";
 
+function getDirectOffer(product) {
+  const offers = Array.isArray(product.prices) ? product.prices : [];
+  return offers.find((offer) => {
+    try {
+      const url = new URL(offer.url);
+      return (url.protocol === "https:" || url.protocol === "http:")
+        && url.pathname !== "/"
+        && !["google.com", "www.google.com", "example.com", "www.example.com"].includes(url.hostname);
+    } catch {
+      return false;
+    }
+  });
+}
+
 function ProductCard({ product }) {
+  const directOffer = getDirectOffer(product);
+
   return (
     <div className={styles.card}>
 
@@ -48,9 +64,14 @@ function ProductCard({ product }) {
           <strong>{product.platform}</strong>
         </div>
 
-        <Link to={`/product/${product.id}`} className={styles.button}>
-          Compare prices <span aria-hidden="true">→</span>
-        </Link>
+        <div className={styles.actions}>
+          <Link to={`/product/${product.id}`} className={styles.button}>
+            Compare prices <span aria-hidden="true">→</span>
+          </Link>
+          {directOffer && <a className={`${styles.button} ${styles.storeButton}`} href={directOffer.url} target="_blank" rel="noreferrer">
+            View product at {directOffer.platform} <span aria-hidden="true">↗</span>
+          </a>}
+        </div>
 
       </div>
 

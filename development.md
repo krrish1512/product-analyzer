@@ -77,6 +77,18 @@ npm run db:setup
 
 Then run `npm run dev:api` and `npm run dev` in separate terminals as above. When `DATABASE_URL` is set in `.env`, the development API uses PostgreSQL instead of embedded PostgreSQL. Compose reads `.env` automatically; the template's password is for local use only.
 
+The app supports optional live marketplace providers. Add one or more of the following keys to your local `.env` file to enable them:
+
+```env
+EBAY_CLIENT_ID=
+EBAY_CLIENT_SECRET=
+SERPAPI_API_KEY=
+OPENWEBNINJA_API_KEY=
+OPENWEBNINJA_BASE_URL=https://api.openwebninja.com
+```
+
+The backend chooses only the configured providers, skips unavailable integrations cleanly, and falls back to the demo catalog when no real-data keys are present.
+
 The migration command records applied versions in `schema_migrations`. Seeding is idempotent and preserves existing product and offer rows.
 
 ## 5. Make and Verify Changes
