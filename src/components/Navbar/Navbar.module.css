@@ -1,87 +1,564 @@
+/* =========================================================
+   NAVBAR — PREMIUM PRICE INTELLIGENCE
+========================================================= */
+
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
+
   width: 100%;
-  background: rgba(255, 255, 255, 0.94);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(14px);
+
+  background: rgba(248, 250, 252, 0.78);
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  box-shadow:
+    0 4px 20px rgba(15, 23, 42, 0.035);
+
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
+
+/* =========================================================
+   NAV CONTAINER
+========================================================= */
+
 .container {
+  position: relative;
+
   max-width: 1240px;
   height: 72px;
+
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 28px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  gap: 28px;
 }
+
+
+/* =========================================================
+   LOGO
+========================================================= */
 
 .logo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+
   gap: 10px;
+
+  color: #0f172a;
+
   font-family: "Manrope", sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--ink);
+
+  font-size: 19px;
+  font-weight: 800;
+
+  letter-spacing: -0.5px;
+
+  white-space: nowrap;
+
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
 }
 
+
+.logo:hover {
+  transform: translateY(-1px);
+}
+
+
 .logoMark {
-  width: 32px;
-  height: 32px;
+  position: relative;
+
+  width: 34px;
+  height: 34px;
+
   display: grid;
   place-items: center;
-  border-radius: 9px;
+
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb 0%,
+      #1d4ed8 55%,
+      #0ea5e9 100%
+    );
+
   color: white;
-  background: var(--green);
-  font-size: 17px;
+
+  font-size: 16px;
+  font-weight: 800;
+
+  box-shadow:
+    0 8px 18px rgba(37, 99, 235, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  transform: translateZ(0);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
+
+
+.logoMark::after {
+  position: absolute;
+  content: "";
+
+  inset: 1px;
+
+  border-radius: 10px;
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  pointer-events: none;
+}
+
+
+.logo:hover .logoMark {
+  transform:
+    translateY(-2px)
+    rotate(-3deg);
+
+  box-shadow:
+    0 12px 25px rgba(37, 99, 235, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+
+/* =========================================================
+   NAV LINKS
+========================================================= */
 
 .links {
   display: flex;
   align-items: center;
+
   gap: 30px;
+
+  margin-left: auto;
 }
+
 
 .link {
+  position: relative;
+
   display: inline-flex;
   align-items: center;
+
   gap: 7px;
-  color: var(--muted);
-  font-size: 14px;
-  transition: color 0.2s ease;
+
+  padding: 8px 2px;
+
+  color: #64748b;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.active, .link:hover { color: var(--green-dark); }
-.active { font-weight: 700; }
-.count { min-width: 19px; height: 19px; display: grid; place-items: center; border-radius: 50%; background: var(--green-soft); color: var(--green-dark); font-size: 11px; font-weight: 700; }
+
+.link::after {
+  position: absolute;
+  content: "";
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2563eb,
+      #38bdf8
+    );
+
+  transform: scaleX(0);
+
+  transform-origin: center;
+
+  transition:
+    transform 0.25s ease;
+}
+
+
+.link:hover {
+  color: #2563eb;
+
+  transform: translateY(-1px);
+}
+
+
+.link:hover::after {
+  transform: scaleX(1);
+}
+
+
+/* =========================================================
+   ACTIVE LINK
+========================================================= */
+
+.active {
+  color: #0f172a;
+
+  font-weight: 750;
+}
+
+
+.active::after {
+  transform: scaleX(1);
+}
+
+
+/* =========================================================
+   NAV COUNT
+========================================================= */
+
+.count {
+  min-width: 20px;
+  height: 20px;
+
+  padding: 0 5px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(37, 99, 235, 0.12);
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eff6ff,
+      #dbeafe
+    );
+
+  color: #2563eb;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  box-shadow:
+    0 3px 8px rgba(37, 99, 235, 0.08);
+}
+
+
+/* =========================================================
+   SEARCH BUTTON
+========================================================= */
 
 .searchButton {
-  padding: 10px 15px;
-  border-radius: 6px;
-  background: var(--green);
+  position: relative;
+
+  min-height: 42px;
+
+  padding: 0 17px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.16);
+
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #1d4ed8
+    );
+
   color: white;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background 0.2s, transform 0.2s;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    filter 0.22s ease;
 }
 
-.searchButton span { margin-right: 5px; font-size: 18px; vertical-align: -1px; }
-.searchButton:hover { background: var(--green-dark); transform: translateY(-1px); }
 
-@media (max-width: 768px) {
-  .container { gap: 12px; padding: 0 18px; }
-  .links { gap: 17px; }
-  .link { font-size: 12px; }
-  .searchButton { padding: 9px 11px; white-space: nowrap; font-size: 12px; }
+.searchButton::before {
+  position: absolute;
+  content: "";
+
+  top: 0;
+  left: -100%;
+
+  width: 70%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.18),
+      transparent
+    );
+
+  transform: skewX(-20deg);
+
+  transition: left 0.5s ease;
 }
 
-@media (max-width: 430px) {
-  .container { flex-wrap: wrap; height: auto; min-height: 64px; padding: 10px 16px; }
-  .logo { font-size: 18px; }
-  .links { order: 3; width: 100%; justify-content: space-between; }
-  .searchButton { margin-left: auto; }
+
+.searchButton:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.05);
+
+  box-shadow:
+    0 12px 27px rgba(37, 99, 235, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+
+.searchButton:hover::before {
+  left: 130%;
+}
+
+
+.searchButton:active {
+  transform: translateY(0);
+}
+
+
+.searchButton span {
+  margin-right: 6px;
+
+  font-size: 17px;
+  line-height: 1;
+
+  vertical-align: -1px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+  .container {
+    padding: 0 20px;
+
+    gap: 18px;
+  }
+
+  .links {
+    gap: 20px;
+  }
+
+  .link {
+    font-size: 12px;
+  }
+
+  .searchButton {
+    min-height: 40px;
+
+    padding: 0 13px;
+
+    font-size: 12px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  .container {
+    height: 66px;
+
+    padding: 0 18px;
+
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 17px;
+  }
+
+  .logoMark {
+    width: 32px;
+    height: 32px;
+
+    border-radius: 10px;
+  }
+
+  .links {
+    gap: 15px;
+  }
+
+  .link {
+    padding: 6px 0;
+
+    font-size: 11px;
+  }
+
+  .searchButton {
+    min-height: 38px;
+
+    padding: 0 11px;
+
+    border-radius: 10px;
+
+    font-size: 11px;
+  }
+
+  .searchButton span {
+    margin-right: 4px;
+
+    font-size: 15px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .container {
+    height: auto;
+    min-height: 64px;
+
+    padding: 9px 15px;
+
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    font-size: 17px;
+  }
+
+  .logoMark {
+    width: 31px;
+    height: 31px;
+  }
+
+  .searchButton {
+    margin-left: auto;
+
+    min-height: 37px;
+
+    padding: 0 10px;
+  }
+
+  .links {
+    order: 3;
+
+    width: 100%;
+
+    padding-top: 8px;
+
+    display: flex;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
+  }
+
+  .link {
+    flex: 1;
+
+    justify-content: center;
+
+    font-size: 11px;
+  }
+
+  .count {
+    min-width: 18px;
+    height: 18px;
+
+    font-size: 9px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+========================================================= */
+
+@media (max-width: 360px) {
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .logo {
+    font-size: 15px;
+  }
+
+  .logoMark {
+    width: 29px;
+    height: 29px;
+  }
+
+  .searchButton {
+    padding: 0 8px;
+
+    font-size: 10px;
+  }
+
+  .links {
+    gap: 4px;
+  }
+
+  .link {
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .logo,
+  .logoMark,
+  .link,
+  .searchButton {
+    transition: none;
+  }
+
+  .searchButton::before {
+    display: none;
+  }
 }

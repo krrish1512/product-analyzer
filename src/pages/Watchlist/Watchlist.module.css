@@ -1,13 +1,482 @@
-.page { max-width: 1240px; min-height: calc(100vh - 160px); margin: 0 auto; padding: 58px 28px 86px; }
-.header { max-width: 620px; margin-bottom: 34px; }
-.eyebrow { margin: 0 0 10px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 1.3px; }
-.header h1 { margin: 0 0 10px; font-family: "Manrope", sans-serif; font-size: 38px; }
-.header > p:last-child { margin: 0; color: var(--muted); line-height: 1.65; }
-.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
-.empty { min-height: 330px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; border: 1px dashed #cbd5c9; border-radius: 8px; background: rgba(255,255,255,.55); text-align: center; }
-.emptyIcon { color: var(--green); font-size: 38px; line-height: 1; }
-.empty h2 { margin: 17px 0 7px; font-family: "Manrope", sans-serif; font-size: 22px; }
-.empty p { margin: 0 0 20px; color: var(--muted); }
-.button { padding: 11px 16px; border-radius: 5px; background: var(--green); color: white; font-size: 14px; font-weight: 700; }
-@media (max-width: 980px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 620px) { .page { padding: 42px 18px 60px; } .grid { grid-template-columns: 1fr; } .header h1 { font-size: 32px; } }
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page {
+  position: relative;
+  max-width: 1240px;
+  min-height: calc(100vh - 160px);
+  margin: 0 auto;
+  padding: 64px 28px 96px;
+}
+
+/* Ambient background glow */
+
+.page::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  right: 8%;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.07);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.page::after {
+  content: "";
+  position: absolute;
+  bottom: 10%;
+  left: 4%;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: rgba(14, 165, 233, 0.05);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+  max-width: 680px;
+  margin-bottom: 42px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 0 0 12px;
+
+  color: #2563eb;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  box-shadow:
+    0 0 0 4px rgba(37, 99, 235, 0.1),
+    0 0 14px rgba(37, 99, 235, 0.3);
+}
+
+.header h1 {
+  margin: 0 0 12px;
+
+  color: #0f172a;
+
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(34px, 4vw, 44px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -1.6px;
+}
+
+.header > p:last-child {
+  max-width: 620px;
+
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   PRODUCT GRID
+========================================================= */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+
+  perspective: 1200px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty {
+  position: relative;
+
+  min-height: 360px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 42px 30px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.96),
+      rgba(248, 250, 252, 0.82)
+    );
+
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.07),
+    0 8px 22px rgba(37, 99, 235, 0.04);
+
+  text-align: center;
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  isolation: isolate;
+}
+
+/* Decorative blue glow */
+
+.empty::before {
+  content: "";
+
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 260px;
+  height: 260px;
+
+  border-radius: 50%;
+
+  background: rgba(37, 99, 235, 0.08);
+
+  filter: blur(45px);
+
+  pointer-events: none;
+}
+
+/* Decorative ring */
+
+.empty::after {
+  content: "";
+
+  position: absolute;
+
+  width: 220px;
+  height: 220px;
+
+  border: 1px solid rgba(37, 99, 235, 0.06);
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   EMPTY ICON
+========================================================= */
+
+.emptyIcon {
+  position: relative;
+  z-index: 1;
+
+  width: 76px;
+  height: 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #eff6ff
+    );
+
+  color: #2563eb;
+
+  font-size: 38px;
+  line-height: 1;
+
+  box-shadow:
+    0 18px 35px rgba(37, 99, 235, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  transform: translateZ(20px);
+}
+
+
+/* =========================================================
+   EMPTY CONTENT
+========================================================= */
+
+.empty h2 {
+  position: relative;
+  z-index: 1;
+
+  margin: 22px 0 8px;
+
+  color: #0f172a;
+
+  font-family: "Manrope", sans-serif;
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.empty p {
+  position: relative;
+  z-index: 1;
+
+  max-width: 420px;
+
+  margin: 0 0 24px;
+
+  color: #64748b;
+
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.button {
+  position: relative;
+  z-index: 1;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 44px;
+
+  padding: 0 18px;
+
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #1d4ed8
+    );
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  box-shadow:
+    0 12px 24px rgba(37, 99, 235, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    filter 0.22s ease;
+}
+
+.button:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 18px 32px rgba(37, 99, 235, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  filter: brightness(1.04);
+}
+
+.button:active {
+  transform: translateY(-1px);
+}
+
+.button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   GRID RESPONSIVENESS
+========================================================= */
+
+@media (max-width: 1080px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .page {
+    padding-top: 54px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 720px) {
+  .page {
+    padding: 46px 20px 70px;
+  }
+
+  .header {
+    margin-bottom: 32px;
+  }
+
+  .header h1 {
+    font-size: 34px;
+    letter-spacing: -1.2px;
+  }
+
+  .header > p:last-child {
+    font-size: 14px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .empty {
+    min-height: 320px;
+    border-radius: 20px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .page {
+    padding: 38px 16px 58px;
+  }
+
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.2px;
+  }
+
+  .header h1 {
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+
+  .header > p:last-child {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .empty {
+    min-height: 300px;
+
+    padding: 34px 22px;
+
+    border-radius: 18px;
+  }
+
+  .emptyIcon {
+    width: 68px;
+    height: 68px;
+
+    border-radius: 19px;
+
+    font-size: 34px;
+  }
+
+  .empty h2 {
+    font-size: 21px;
+  }
+
+  .empty p {
+    font-size: 13px;
+  }
+
+  .button {
+    min-height: 42px;
+    padding: 0 16px;
+  }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 360px) {
+  .page {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .header h1 {
+    font-size: 27px;
+  }
+
+  .empty {
+    min-height: 280px;
+    padding: 30px 18px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button:hover {
+    transform: none;
+  }
+}
